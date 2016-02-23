@@ -1,0 +1,21 @@
+{
+  "name": "velopedia-api",
+  "version": "1.0.0",
+  "description": "API for Velopedia",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zsolt Nemeth",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^1.4.0",
+    "feed-read": "0.0.1",
+    "good": "^6.3.0",
+    "good-console": "^5.0.2",
+    "hapi": "^8.8.0",
+    "lodash": "^3.10.0",
+    "moment": "^2.10.3",
+    "tumblr": "^0.4.1"
+  }
+}
