@@ -40,7 +40,7 @@ server.route({
     method: 'GET',
     path:'/ping',
     handler: function (request, reply) {
-        reply("pong haha");
+        reply("pong hahaha");
     }
 });
 
