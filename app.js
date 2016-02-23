@@ -36,6 +36,14 @@ server.route({
     }
 });
 
+server.route({
+    method: 'GET',
+    path:'/ping',
+    handler: function (request, reply) {
+        reply("pong");
+    }
+});
+
 // Add the route
 server.route({
     method: 'GET',
