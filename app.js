@@ -12,13 +12,7 @@ var tumblr = require('./modules/tumblr');
 // Create a server with a host and port
 var server = new Hapi.Server();
 server.connection({
-    host: 'localhost',
-    port: 8081,
-    routes: {
-        cors: {
-            origin: ['*']
-        }
-    }
+    port: 8081
 });
 
 
