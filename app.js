@@ -4,60 +4,30 @@ var async = require('async');
 var feed = require('feed-read');
 var _ = require('lodash');
 var moment = require('moment');
-
+var request = require('request');
 
 var tumblr = require('./modules/tumblr');
 var strava = require('strava-v3');
 
 
+var RIVER_URL = "https://river.velopedia.co/";
+
+
+
 // Create a server with a host and port
 var server = new Hapi.Server();
 server.connection({
-    port: 8081
-});
-
-server.state('strava_access_token', {
-    ttl: 24 * 60 * 60 * 1000,     // One day
-    encoding: 'base64json',
-    path: "/"
-});
-
-
-server.route({
-    method: 'GET',
-    path:'/strava/{param*}',
-    handler: {
-        directory: {
-            path: 'strava'
-        }
-    }
-});
-
-server.route({
-    method: 'GET',
-    path:'/strava/tokenexchange',
-    handler: function (request, reply) {
-        if(request.query.error){
-            console.error(request.query.error);
-            throw request.query.error
-        }
-
-        var code = request.query.code;
-        strava.oauth.getToken(code, function(err, res){
-            if(err)
-                throw err;
-
-            reply(res).state('strava_access_token', res.access_token).redirect("/strava/main.html")
-        })
+    port: 8081,
+    routes: {
+        cors: true
     }
 });
 
 
 
-
 server.route({
     method: 'GET',
-    path:'/getposts/{offset}/{size}',
+    path:'/inspiration/{offset}/{size}',
     handler: function (request, reply) {
 
         var offset = request.params.offset,
@@ -74,13 +44,7 @@ server.route({
     }
 });
 
-server.route({
-    method: 'GET',
-    path:'/ping',
-    handler: function (request, reply) {
-        reply("pong hahaha");
-    }
-});
+
 
 server.route({
     method: 'GET',
@@ -98,30 +62,27 @@ server.route({
     }
 });
 
-// Add the route
+
 server.route({
     method: 'GET',
-    path:'/getnews',
-    handler: function (request, reply) {
-        async.map(rssUrls, function (i, callback) {
-            feed(i, callback);
-        }, function (err, result) {
-            if (err) {
-                // Somewhere, something went wrong…
+    path:'/news',
+    handler: function (req, reply) {
+        request(RIVER_URL + "getfeed" , {json: true}, function (error, response, body) {
+            if (error) {
+                throw error
+                reply(error)
             }
-            var res = _.map(_.flattenDeep(result), function(item){
-                return {
-                    title: item.title,
-                    link: item.link,
-                    date: item.published,
-                    feed: item.feed,
-                    diff: moment.duration(moment().diff(moment(new Date(item.published)))).humanize()
-                }
-            });
 
-            reply(_.sortByOrder(res, function(item) {return new Date(item.date);}, ['desc']));
+           reply(body);
+        })
+    }
+});
 
-        });
+server.route({
+    method: 'GET',
+    path:'/ping',
+    handler: function (request, reply) {
+        reply("pong hahaha");
     }
 });
 
