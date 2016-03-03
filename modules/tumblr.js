@@ -1,3 +1,5 @@
+'use strict'
+
 var tumblr = require('tumblr');
 var _ = require('lodash');
 
@@ -19,9 +21,27 @@ module.exports = {
                 callback(error);
             }
 
-            var u = _.uniq(response.posts, 'reblog_key')
-            callback(null, u);
-        });n
+            var u = _.uniq(response.posts, 'reblog_key');
+
+            let multiplePhotoItems = [];
+
+            u.forEach(i => {
+                if(i.photos.length > 1){
+
+                    i.photos.forEach( j => {
+                        var clone = _.clone(i);
+                        i.photos = [];
+                        i.photos[0]= j;
+
+                        multiplePhotoItems.push(clone);
+                    });
+                }
+            });
+
+            var all = u.concat(multiplePhotoItems);
+
+            callback(null, all);
+        });
     },
     getUserInfo: function(){
         return user.info(function (error, response) {
