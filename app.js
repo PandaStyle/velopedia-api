@@ -67,13 +67,52 @@ server.route({
     method: 'GET',
     path:'/news',
     handler: function (req, reply) {
+        var feedtime = new Date();
         request(RIVER_URL + "getfeed" , {json: true}, function (error, response, body) {
             if (error) {
-                throw error
-                reply(error)
+                throw error;
             }
 
-           reply(body);
+            var res = [];
+
+            _.forEach(body["updatedFeeds"]["updatedFeed"], function(elem){
+
+                function getImage(_item){
+                    var image_placeholder_url = "http://www.engraversnetwork.com/files/placeholder.jpg";
+
+                    if(_item.image) {
+                        return _item.image.src;
+                    } else if(_item.enclosure && _item.enclosure[0].url) {
+                        return _item.enclosure[0].url;
+                    } else {
+                        return image_placeholder_url;
+                    }
+                }
+
+                _.forEach(elem.item, function(item){
+                    res.push({
+                        id: item.id,
+                        summary: item.body,
+                        title: item.title,
+                        link: item.link,
+                        feed: elem.feedTitle.split('-')[0],
+                        published: item.pubDate,
+                        image: getImage(item),
+                        diff: moment.duration(moment().diff(moment(new Date(elem.whenLastUpdate)))).humanize(),
+
+                        websiteUrl: elem.websiteUrl,
+                        websiteDesc: elem.feedDescription,
+                        whenLastUpdate: elem.whenLastUpdate
+                    });
+                })
+
+            });
+
+            reply({
+                feed: res,
+                meta: body.metadata,
+                time: (new Date().getTime() - feedtime.getTime()) + ' ms'
+            });
         })
     }
 });
