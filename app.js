@@ -98,6 +98,7 @@ server.route({
                         feed: elem.feedTitle.split('-')[0],
                         published: item.pubDate,
                         image: getImage(item),
+                        imageFromMeta: item.imageFromMeta,
                         diff: moment.duration(moment().diff(moment(new Date(elem.whenLastUpdate)))).humanize(),
 
                         websiteUrl: elem.websiteUrl,
