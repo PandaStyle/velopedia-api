@@ -82,8 +82,8 @@ server.route({
 
                      if(_item.imageFromMeta) {
                         return _item.imageFromMeta;
-                    } else if(_item.imageFromIneed){
-                        return _item.imageFromIneed;
+                    } else if(_item.imageFromIneed && _item.imageFromIneed.src){
+                        return _item.imageFromIneed.src;
                     } else {
                          console.log("Neither meta or ineed image represented for item: ", _item);
                          return image_placeholder_url;
@@ -109,8 +109,10 @@ server.route({
 
             });
 
+            var taken  = _.take(res, 50);
+
             reply({
-                feed: res,
+                feed: taken,
                 meta: body.metadata,
                 time: (new Date().getTime() - feedtime.getTime()) + ' ms'
             });
