@@ -80,13 +80,14 @@ server.route({
                 function getImage(_item){
                     var image_placeholder_url = "http://www.engraversnetwork.com/files/placeholder.jpg";
 
-                    if(_item.image) {
-                        return _item.image.src;
-                    } else if(_item.enclosure && _item.enclosure[0].url) {
-                        return _item.enclosure[0].url;
+                     if(_item.imageFromMeta) {
+                        return _item.imageFromMeta;
+                    } else if(_item.imageFromIneed){
+                        return _item.imageFromIneed;
                     } else {
-                        return image_placeholder_url;
-                    }
+                         console.log("Neither meta or ineed image represented for item: ", _item);
+                         return image_placeholder_url;
+                     }
                 }
 
                 _.forEach(elem.item, function(item){
@@ -98,7 +99,6 @@ server.route({
                         feed: elem.feedTitle.split('-')[0],
                         published: item.pubDate,
                         image: getImage(item),
-                        imageFromMeta: item.imageFromMeta,
                         diff: moment.duration(moment().diff(moment(new Date(elem.whenLastUpdate)))).humanize(),
 
                         websiteUrl: elem.websiteUrl,
