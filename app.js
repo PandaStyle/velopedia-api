@@ -10,7 +10,8 @@ var tumblr = require('./modules/tumblr');
 var strava = require('strava-v3');
 
 
-var RIVER_URL = "https://river.velopedia.co/";
+//var RIVER_URL = "https://river.velopedia.co/";
+var RIVER_URL = "http://localhost:1337/";
 
 
 
@@ -97,9 +98,9 @@ server.route({
                         title: item.title,
                         link: item.link,
                         feed: elem.feedTitle.split('-')[0],
-                        published: item.pubDate,
+                        published: new Date(item.pubDate),
                         image: getImage(item),
-                        diff: moment.duration(moment().diff(moment(new Date(elem.whenLastUpdate)))).humanize(),
+                        diff: moment.duration(moment().diff(moment(new Date(item.pubDate)))).humanize(),
 
                         websiteUrl: elem.websiteUrl,
                         websiteDesc: elem.feedDescription,
@@ -109,7 +110,14 @@ server.route({
 
             });
 
-            var taken  = _.take(res, 50);
+
+            var sorted = _.sortBy(res, 'published').reverse();
+            var taken  = _.take(sorted, 50);
+
+            _.forEach(taken, (i) => {
+                console.log(i.published);
+            })
+
 
             reply({
                 feed: taken,
