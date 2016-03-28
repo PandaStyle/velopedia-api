@@ -22,25 +22,27 @@ module.exports = {
             }
 
             var u = _.uniq(response.posts, 'reblog_key');
-
-            let multiplePhotoItems = [];
+            
+            let resultArray = [];
 
             u.forEach(i => {
-                if(i.photos.length > 1){
+                if(i.photos.length == 1){
+                    resultArray.push(i);
+                } else if(i.photos.length > 1){
 
-                    i.photos.forEach( j => {
-                        var clone = _.clone(i);
-                        i.photos = [];
-                        i.photos[0]= j;
+                    for(let j = 0; j < i.photos.length; j++){
+                        let p =  i.photos[j];
 
-                        multiplePhotoItems.push(clone);
-                    });
+                        let clone = _.clone(i);
+                        clone.photos = [];
+                        clone.photos[0]= p;
+
+                        resultArray.push(clone);
+                    }
                 }
             });
 
-            var all = u.concat(multiplePhotoItems);
-
-            callback(null, all);
+            callback(null, resultArray);
         });
     },
     getUserInfo: function(){
