@@ -1,5 +1,5 @@
 module.exports = {
-    "cyclingnews" : "http://cyclingnews.com/news",
+    "cyclingnews" : "http://www.cyclingnews.com/news",
     "cyclingtips" : "http://cyclingtips.com",
     "roadcc" : "http://road.cc/rss",
     "roadbikeaction" : "http://roadbikeaction.com",

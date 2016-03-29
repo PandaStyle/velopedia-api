@@ -73,14 +73,6 @@ server.route({
 
         var feedtime = new Date();
 
-
-       var exludedFeeds =  req.payload.excluded ? JSON.parse(req.payload.excluded) : [];
-
-        exludedFeeds.forEach( i => {
-            console.log("---");
-            console.log(i);
-        });
-
         request(RIVER_URL + "getfeed" , {json: true}, function (error, response, body) {
             if (error) {
                 throw error;
@@ -123,12 +115,21 @@ server.route({
             });
 
             //exlude
+            var exludedFeeds =  req.payload.excluded ? JSON.parse(req.payload.excluded) : [];
+            exludedFeeds.forEach( (exl) => {
+                var websiteUrl = feedUrlLookup[exl];
 
-
-
-
+                _.remove(res, (item) => {
+                    return item.websiteUrl == websiteUrl;
+                });
+            });
+            
+            //sort
             var sorted = _.sortBy(res, 'published').reverse();
+
+            //take
             var taken  = _.take(sorted, 50);
+
 
             reply({
                 feed: taken,
