@@ -9,6 +9,8 @@ var request = require('request');
 var tumblr = require('./modules/tumblr');
 var strava = require('strava-v3');
 
+var feedUrlLookup = require('./modules/feedUrlLookup.js')
+
 
 //var RIVER_URL = "https://river.velopedia.co/";
 var RIVER_URL = "http://localhost:1337/";
@@ -65,10 +67,20 @@ server.route({
 
 
 server.route({
-    method: 'GET',
-    path:'/news',
+    method: 'POST',
+    path:'/news{excluded?}',
     handler: function (req, reply) {
+
         var feedtime = new Date();
+
+
+       var exludedFeeds =  req.payload.excluded ? JSON.parse(req.payload.excluded) : [];
+
+        exludedFeeds.forEach( i => {
+            console.log("---");
+            console.log(i);
+        });
+
         request(RIVER_URL + "getfeed" , {json: true}, function (error, response, body) {
             if (error) {
                 throw error;
@@ -110,14 +122,13 @@ server.route({
 
             });
 
+            //exlude
+
+
+
 
             var sorted = _.sortBy(res, 'published').reverse();
             var taken  = _.take(sorted, 50);
-
-            _.forEach(taken, (i) => {
-                console.log(i.published);
-            })
-
 
             reply({
                 feed: taken,
