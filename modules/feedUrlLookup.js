@@ -7,6 +7,7 @@ module.exports = {
     "pezcycling" : "http://www.pezcyclingnews.com",
     "roadcc" : "http://road.cc/rss",
     "roadbikeaction" : "http://roadbikeaction.com",
-    "velonews" : "http://velonews.competitor.com",
-    "theinnerring": "http://inrng.com"
+    "sbs": "http://www.sbs.com.au/cyclingcentral/rss/articles",
+    "theinnerring": "http://inrng.com",
+    "velonews" : "http://velonews.competitor.com"
 };
