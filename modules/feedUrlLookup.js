@@ -8,7 +8,6 @@ module.exports = {
     "pelotonmagazine" : "http://www.pelotonmagazine.com",
     "roadcc" : "http://road.cc/rss",
     "roadbikeaction" : "http://roadbikeaction.com",
-    "sbs": "http://www.sbs.com.au/cyclingcentral/rss/articles",
     "theinnerring": "http://inrng.com",
     "velonews" : "http://velonews.competitor.com"
 };
